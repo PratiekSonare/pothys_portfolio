@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Backend service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pothys-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - JWT_SECRET=iLOVEpaneer65
+      - MONGO_URI=mongodb+srv://pratieksonareisc_db_user:eMiuvf0JW4f40MS4@prod.hejljzo.mongodb.net/
+      - PORT=5000
+    volumes:
+      - ./backend/uploads:/app/uploads
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # Frontend service
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pothys-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_BACKEND_LINK=http://backend:5000
+      - NEXT_PUBLIC_FRONTEND_LINK=https://localhost:3000
+      - NEXT_PUBLIC_TRANSACTION_API_KEY=sonarepratiek
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
