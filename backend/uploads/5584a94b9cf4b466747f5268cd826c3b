@@ -1,0 +1,11 @@
+name,price,quantity_ordered,discount,discounted_price,rating,quantity,barcode,Avail,codenum,category,unit,dow
+Apple,120,50,10,108,4.5,30,1234567890123,TRUE,1,Fruit,kg,TRUE
+Milk,60,100,5,57,4.7,50,9876543210987,TRUE,2,Dairy,litre,TRUE
+Laptop,55000,10,15,46750,4.3,5,5432109876543,TRUE,3,Electronics,unit,TRUE
+Shampoo,250,40,20,200,4.2,25,6543210987654,TRUE,4,Personal Care,unit,TRUE
+T-shirt,800,30,10,720,4.6,15,3210987654321,FALSE,5,Clothing,unit,FALSE
+Rice,45,500,5,42.75,4.8,200,1098765432109,TRUE,6,Grocery,kg,TRUE
+Chocolate,150,80,15,127.5,4.9,60,8765432109876,TRUE,7,Food,unit,TRUE
+Phone,35000,15,10,31500,4.4,8,2345678901234,FALSE,8,Electronics,unit,FALSE
+Perfume,1200,25,25,900,4.1,10,5678901234567,TRUE,9,Personal Care,unit,TRUE
+Water Bottle,50,200,5,47.5,4.7,120,8901234567890,FALSE,10,Utility,unit,FALSE

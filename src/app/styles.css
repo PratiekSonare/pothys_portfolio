@@ -1,0 +1,206 @@
+/* styles.css */
+
+#app {
+  height: 100%;
+}
+
+html,
+body {
+  position: relative;
+  height: 100%;
+}
+
+body {
+  background: #eee;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #000;
+  margin: 0;
+  padding: 0;
+}
+
+.swiper-slide {
+  width: 300px;
+  /* Default width for larger screens */
+  height: 400px;
+  /* Default height */
+  display: flex;
+  /* Use flex to center content */
+  justify-content: center;
+  /* Center horizontally */
+  align-items: center;
+  /* Center vertically */
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eee;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #00c448b4; /* A nice green color */
+  border-radius: 10px;
+  border: 1px solid #eee;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #00c448b4; /* A darker green for hover */
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.header-sdw {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+
+.home-end-sdw {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px -13px 27px -5px, rgba(0, 0, 0, 0.3) 0px -8px 16px -8px;
+}
+
+
+.card-sdw {
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 16px 16px;
+}
+
+.searchbar-sdw {
+  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+/* Add this CSS to your styles */
+.blur {
+  backdrop-filter: blur(5px);
+  /* Adjust the blur amount as needed */
+  transition: filter 0.5s ease-in-out;
+  /* Smooth transition for the blur effect */
+}
+
+/* Add this CSS to your styles */
+.searchbar-container {
+  position: relative;
+  /* Make the parent container relative */
+}
+
+.filtered-results {
+  position: absolute;
+  /* Position the results absolutely */
+  top: 100%;
+  /* Position it below the search bar */
+  left: 0;
+  /* Align to the left */
+  right: 0;
+  /* Stretch to the right */
+  z-index: 50;
+  /* Ensure it hovers above other components */
+}
+
+.placeholder-animation {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.filtered-results {
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.spinner {
+  border: 8px solid #f3f3f3;
+  /* Light grey */
+  border-top: 8px solid #3498db;
+  /* Blue */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.bg-dotted {
+  background-image: url('https://cdn.jsdelivr.net/gh/PratiekSonare/test_deploy_pothys@main/public/abstract-curve.avif');
+  /* background-image: radial-gradient(circle, #ccc 1px, transparent 5px); */
+  background-size: 2000px 500px;
+  /* Adjust size for spacing */
+
+}
+
+.bg-dotted-emp {
+  background-image: url('https://cdn.jsdelivr.net/gh/PratiekSonare/test_deploy_pothys@main/public/abstract-curve.avif');
+  /* background-image: radial-gradient(circle, #ccc 1px, transparent 5px); */
+  background-size: 2000px 800px;
+  /* Adjust size for spacing */
+
+}
+
+.bg-dow {
+  position: relative;
+  /* Ensure the parent is positioned */
+  overflow: hidden;
+  /* Hide any overflow from the pseudo-element */
+}
+
+.bg-dow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('https://cdn.jsdelivr.net/gh/PratiekSonare/test_deploy_pothys@main/public/blue-gradient.avif');
+  /* background-image: url('/celebration2.webp'); */
+  background-size: 2000px 800px;
+  /* Adjust size for spacing */
+  opacity: 0.5;
+  /* Set the opacity of the background image */
+  z-index: 0;
+  /* Ensure it is behind other content */
+}
+
+.bg-dow>* {
+  position: relative;
+  /* Ensure child elements are above the pseudo-element */
+  z-index: 1;
+  /* Bring child elements above the background */
+}
+
+.quickscan-bg {
+  background-image: url('https://cdn.jsdelivr.net/gh/PratiekSonare/test_deploy_pothys@main/public/blue-gradient.avif');
+  /* background-image: url('/celebration2.webp'); */
+  background-size: 800px 2000px;
+  /* Adjust size for spacing */
+  opacity: 0.5;
+  /* Set the opacity of the background image */
+}
