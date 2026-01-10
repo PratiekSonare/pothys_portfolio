@@ -1,0 +1,235 @@
+===========================================
+EC2 DEPLOYMENT GUIDE - Next.js + Node Backend
+===========================================
+
+OVERVIEW:
+---------
+Deploy frontend (standalone build) and backend to EC2 without cloning the entire repo.
+This saves space by only uploading essential files.
+
+PREREQUISITES:
+--------------
+1. EC2 instance running (Ubuntu)
+2. SSH key (.pem file) downloaded
+3. Node.js installed on EC2
+4. PM2 installed globally on EC2: sudo npm install -g pm2
+
+
+STEP 1: FIX SSH KEY PERMISSIONS (Local Machine)
+------------------------------------------------
+chmod 400 /home/pratiek/Downloads/post-employment/pothys-portfolio/engineer-monke.pem
+
+
+STEP 2: CREATE DIRECTORY STRUCTURE ON EC2
+------------------------------------------
+ssh -i /home/pratiek/Downloads/post-employment/pothys-portfolio/engineer-monke.pem ubuntu@ec2-3-110-158-140.ap-south-1.compute.amazonaws.com
+
+mkdir -p ~/apps/ecom/frontend
+mkdir -p ~/apps/ecom/backend
+exit
+
+
+STEP 3: COPY FILES FROM LOCAL TO EC2 (Local Machine)
+-----------------------------------------------------
+
+# Copy frontend standalone build
+scp -i /home/pratiek/Downloads/post-employment/pothys-portfolio/engineer-monke.pem -r /home/pratiek/Downloads/post-employment/pothys-portfolio/test_deploy_pothys/build_out/standalone ubuntu@3.110.158.140:~/apps/ecom/frontend/
+
+# Copy static assets
+scp -i /home/pratiek/Downloads/post-employment/pothys-portfolio/engineer-monke.pem -r /home/pratiek/Downloads/post-employment/pothys-portfolio/test_deploy_pothys/build_out/static ubuntu@3.110.158.140:~/apps/ecom/frontend/
+
+# Copy public folder (if not empty)
+scp -i /home/pratiek/Downloads/post-employment/pothys-portfolio/engineer-monke.pem -r /home/pratiek/Downloads/post-employment/pothys-portfolio/test_deploy_pothys/public ubuntu@3.110.158.140:~/apps/ecom/frontend/
+
+# Copy backend folder
+scp -i /home/pratiek/Downloads/post-employment/pothys-portfolio/engineer-monke.pem -r /home/pratiek/Downloads/post-employment/pothys-portfolio/test_deploy_pothys/backend ubuntu@3.110.158.140:~/apps/ecom/
+
+
+STEP 4: RESTRUCTURE FRONTEND ON EC2
+------------------------------------
+ssh -i /home/pratiek/Downloads/post-employment/pothys-portfolio/engineer-monke.pem ubuntu@3.110.158.140
+
+cd ~/apps/ecom/frontend
+
+# Move standalone contents to frontend directory
+mv standalone/* ./
+mv standalone/.* ./ 2>/dev/null || true
+rmdir standalone
+
+# Fix nested build_out structure (if exists)
+# Check if build_out/build_out exists
+ls build_out/
+
+# If nested, flatten it:
+mv build_out/build_out/* build_out/
+mv build_out/build_out/.* build_out/ 2>/dev/null || true
+rmdir build_out/build_out
+
+# Verify BUILD_ID exists
+ls build_out/ | grep BUILD_ID
+
+# Final structure should be:
+# ~/apps/ecom/frontend/
+# ├── build_out/
+# │   ├── BUILD_ID
+# │   ├── static/
+# │   └── (other build files)
+# ├── node_modules/
+# ├── package.json
+# └── server.js
+
+
+STEP 5: SETUP BACKEND ON EC2
+-----------------------------
+cd ~/apps/ecom/backend
+
+# Create .env file with environment variables
+nano .env
+
+# Add the following (update values as needed):
+JWT_SECRET=iLOVEpaneer65
+MONGO_URI=mongodb+srv://pratieksonareisc_db_user:eMiuvf0JW4f40MS4@prod.hejljzo.mongodb.net/
+NEXT_PUBLIC_BACKEND_LINK=http://3.110.158.140:5000
+NEXT_PUBLIC_FRONTEND_LINK=http://3.110.158.140:3000
+NEXT_PUBLIC_TRANSACTION_API_KEY=sonarepratiek
+
+# Save and exit (Ctrl+X, Y, Enter)
+
+# Install dependencies (production only)
+npm install --production
+
+
+STEP 6: CREATE FRONTEND .ENV FILE (if needed)
+----------------------------------------------
+cd ~/apps/ecom/frontend
+
+nano .env
+
+# Add:
+NEXT_PUBLIC_BACKEND_LINK=http://3.110.158.140:5000
+
+# Save and exit
+
+
+STEP 7: START SERVICES WITH PM2
+--------------------------------
+# Start backend
+cd ~/apps/ecom/backend
+pm2 start index.js --name ecom-backend
+
+# Start frontend
+cd ~/apps/ecom/frontend
+pm2 start server.js --name ecom-frontend
+
+# Check status
+pm2 status
+
+# View logs
+pm2 logs
+
+# Save PM2 process list (persist across reboots)
+pm2 save
+
+# Generate startup script
+pm2 startup
+# Copy and run the command that PM2 outputs (starts with 'sudo')
+
+
+STEP 8: CONFIGURE EC2 SECURITY GROUP (AWS Console)
+---------------------------------------------------
+Go to: AWS Console → EC2 → Instances → Select your instance → Security tab
+
+Click on Security Group → Edit inbound rules
+
+Add the following rules:
+1. SSH (already exists)
+   - Type: SSH
+   - Port: 22
+   - Source: Your IP or 0.0.0.0/0
+
+2. Frontend
+   - Type: Custom TCP
+   - Port: 3000 (or 3001)
+   - Source: 0.0.0.0/0
+
+3. Backend
+   - Type: Custom TCP
+   - Port: 5000
+   - Source: 0.0.0.0/0
+
+Save rules
+
+
+STEP 9: ACCESS YOUR APPLICATION
+--------------------------------
+Frontend: http://3.110.158.140:3000
+Backend:  http://3.110.158.140:5000
+
+Check logs:
+pm2 logs ecom-frontend
+pm2 logs ecom-backend
+
+
+USEFUL PM2 COMMANDS
+-------------------
+pm2 status              # Check status of all processes
+pm2 logs                # View all logs
+pm2 logs ecom-frontend  # View frontend logs only
+pm2 logs ecom-backend   # View backend logs only
+pm2 restart all         # Restart all processes
+pm2 restart ecom-frontend  # Restart frontend only
+pm2 stop all            # Stop all processes
+pm2 delete all          # Delete all processes
+pm2 monit               # Real-time monitoring dashboard
+pm2 save                # Save current process list
+pm2 kill                # Kill PM2 daemon completely
+
+
+TROUBLESHOOTING
+---------------
+
+1. Port already in use:
+   - Check: sudo lsof -i :3000
+   - Kill PM2: pm2 kill
+   - Wait 60 seconds or reboot: sudo reboot
+
+2. Can't access from browser:
+   - Check Security Group inbound rules
+   - Verify service is running: pm2 status
+   - Check logs: pm2 logs
+
+3. Backend connection issues:
+   - Update NEXT_PUBLIC_BACKEND_LINK in frontend .env
+   - Restart frontend: pm2 restart ecom-frontend
+   - Check MongoDB connection in backend logs
+
+4. Frontend shows errors:
+   - Check build_out/BUILD_ID exists
+   - Verify static folder is in build_out/static
+   - Check logs: pm2 logs ecom-frontend
+
+
+SPACE SAVINGS
+-------------
+Traditional approach (git clone):      ~650MB - 1.3GB
+This approach (build artifacts only):  ~155MB - 310MB
+Savings:                               ~75% less space
+
+
+NEXT STEPS (OPTIONAL)
+---------------------
+1. Set up Nginx as reverse proxy (port 80/443)
+2. Add SSL certificate with Let's Encrypt
+3. Set up custom domain
+4. Configure CORS properly
+5. Add monitoring (e.g., PM2 Plus)
+6. Set up automated backups
+7. Configure log rotation
+
+
+FILE SIZES BREAKDOWN
+--------------------
+Frontend standalone:     ~50-100MB (includes bundled dependencies)
+Backend code:            ~5-10MB
+Backend node_modules:    ~100-200MB
+Total:                   ~155-310MB

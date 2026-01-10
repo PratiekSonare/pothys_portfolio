@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import QRCodeScanner from "../fastcart/QRCode";
 import { useToast } from "@/hooks/use-toast";
 import categoryMap from '../../data/categoryMap';
-import { LuBarcode as BarcodeIcon, LuQrCode as QrCode, LuLoader2 as Loader2 } from "react-icons/lu";
+import { LuBarcode as BarcodeIcon, LuQrCode as QrCode, LuLoader as Loader2 } from "react-icons/lu";
 
 const ProductForm = forwardRef(({ editingProduct, onProductUpdate, onProductAdd, onClearEditing }, ref) => {
     const { toast } = useToast();

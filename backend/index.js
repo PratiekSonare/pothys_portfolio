@@ -20,7 +20,8 @@ const corsOptions = {
             origin.startsWith('https://pothys.onrender.com') ||
             origin.startsWith('https://skshoppers.com') ||
             origin.startsWith('http://localhost:3000') ||
-            origin.startsWith('http://localhost:3001')) {
+            origin.startsWith('http://localhost:3001') ||
+            origin.startsWith('http://3.110.158.140')) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -435,7 +436,7 @@ app.put('/api/products', verifyAdmin, async (req, res) => {
     }
 });
 
-app.patch('/decsto/:id', async (req, res) => {
+app.patch('/api/decsto/:id', async (req, res) => {
     const { id } = req.params;
     const { numOrder } = req.body;
 

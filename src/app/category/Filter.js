@@ -4,7 +4,7 @@ import '../styles.css'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Separator } from '../../components/ui/separator'
 import { useRouter } from 'next/navigation'
-import { LuBaby as Baby, LuBanana as Banana, LuBone as Bone, LuSparkles as BrushCleaning, LuCable as Cable, LuCake as Cake, LuCupSoda as CupSoda, LuFish as Fish, LuHamburger as Hamburger, LuHeart as Heart, LuShirt as Shirt, LuWheat as Wheat } from 'react-icons/lu'
+import { LuBaby as Baby, LuBanana as Banana, LuBone as Bone, LuSparkles as BrushCleaning, LuCable as Cable, LuCake as Cake, LuCupSoda as CupSoda, LuFish as Fish, LuHam as Hamburger, LuHeart as Heart, LuShirt as Shirt, LuWheat as Wheat } from 'react-icons/lu'
 
 
 const Filter = ({ selectedDiscounts, handleDiscountChange }) => {
